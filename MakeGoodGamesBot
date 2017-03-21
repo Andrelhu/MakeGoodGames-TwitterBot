@@ -1,0 +1,14 @@
+#botaccoutn
+import twitter as twi
+import time
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import Counter
+
+ConsumerKey = 'hWLxSCPBI0tfrN2Pgera6JEkj'
+SecretKey   = 'KoJ3OYuKrxOrGK2BLOuRNRpMzjK724AvFEDHLZqI770RGGUAw4'
+Token       = '364644637-qmxnGTbMBlzoNmirbQdnwrUR8b6rAU0VcKuAPdyK'
+TokenSecret = 'RWXCHbUCWF1ARocUCISMHv3HOH8q9r3IozOLRVgabaVsw'
+
+
