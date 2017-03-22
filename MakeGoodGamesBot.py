@@ -49,9 +49,9 @@ except:
 #       3) RT highest ratio of number_of_RT/number_of_followers of previous day Statuses.
     
 def run_schedule(dt=date,ky='#indiedev',mx=150):
-    tit_for_tat()
+    runtit_for_tat()
     RT_followers(key_=ky,max_=mx)
-    RT_last_day()
+    RT_last_day(dt)
 
         
 #Main Functions for 'run_schedule()'
