@@ -49,8 +49,8 @@ except:
 #       3) RT highest ratio of number_of_RT/number_of_followers of previous day Statuses.
     
 def run_schedule(dt=date,ky='#indiedev',mx=150):
-    runtit_for_tat()
-    RT_followers(key_=ky,max_=mx)
+    #runtit_for_tat()
+    #RT_followers(key_=ky,max_=mx)
     RT_last_day(dt)
 
         
@@ -307,20 +307,20 @@ def plot_distro(d):
 
 def rank_sort(d):
     d['follow'] = [i[29]['followers_count'] for i in d.values]
-    d = d[d.follow > 100]
-    a = [float(i[23])/float(i[29]['followers_count']) for i in d.values]
-    d['rank'] = a
-    d = d.sort('rank',ascending=False)
-    ban,keep=[],[]
-    for i in d.values:
-        if i[27][:15] in ban:
-            keep.append(0)
-        else:
-            keep.append(1)
-            ban.append(i[27][:15])
-    d['ktxt'] = keep
-    d = d[d.ktxt == 1]
-    return d
+    da = d[d.follow > 100]
+    a = [float(i[23])/float(i[29]['followers_count']) for i in da.values]
+    da['rank'] = list(a)
+    dd = da.sort_values(by='rank',ascending=False)
+    #ban,keep=[],[]
+    #for i in d.values:
+    #    if i[27][:15] in ban:
+    #        keep.append(0)
+    #    else:
+    #        keep.append(1)
+    #        ban.append(i[27][:15])
+    #d['ktxt'] = keep
+    #d = d[d.ktxt == 1]
+    return dd
 
 def remember_follow():
     try:
