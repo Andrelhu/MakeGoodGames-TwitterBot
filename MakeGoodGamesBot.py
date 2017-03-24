@@ -49,9 +49,9 @@ except:
 #       3) RT highest ratio of number_of_RT/number_of_followers of previous day Statuses.
     
 def run_schedule(dt=date,ky='#indiedev',mx=150):
-    #runtit_for_tat()
-    #RT_followers(key_=ky,max_=mx)
-    RT_last_day(dt)
+    #tit_for_tat()
+    RT_followers(key_=ky,max_=mx)
+    RT_last_day(dt,key_=ky)
 
         
 #Main Functions for 'run_schedule()'
@@ -83,12 +83,13 @@ def tit_for_tat():
                 erros_ids.append(id_)
 
 #Take previous day tweets. Rank by higher RT of smaller accounts. Try to RT the underdog!
-def RT_last_day(date):
-    print 'RT #indiedev #indiegame #gamedev most relevant tweets from yesterday!'
-    d = latest_tweets(date)
+def RT_last_day(date,key_='#indiedev'):
+    print 'RT '+str(key_)+' most relevant tweets from yesterday!'
+    d = latest_tweets(date,key_=key_)
     d = rank_sort(d)
     plot_distro(d[:5000])
-    RT_this(d[:10000],sleep_t=180)
+    a = RT_this(d[:10000],sleep_t=180)
+    return a
 
 #Take timelines from followers and looks for keyword (default: #indiedev. RTs top tweets (default=2).
 def RT_followers(key_='#indiedev',max_=150,rts_=2): #900/1500 Rate limit
@@ -266,13 +267,13 @@ def save_banDF():
     df.to_pickle('ban_TXT')    
     
 #Based on sixohsix
-def latest_tweets(date=date):
+def latest_tweets(date=date,key_="#indiedev #indiegame #gamedev"):
     print "Search for "+str(date)
-    tweets = t.search.tweets(q="#indiedev #indiegame #gamedev",count=5000,until=date)
+    tweets = t.search.tweets(q=key_,count=5000,until=date)
     dftwt = pd.DataFrame(tweets['statuses'])
     while True:
         try:
-            tweets = t.search.tweets(q="#indiedev #indiegame #gamedev",max_id=min(list(dftwt.id)),count=5000,until=date)
+            tweets = t.search.tweets(q=key_,max_id=min(list(dftwt.id)),count=5000,until=date)
             tempdf = pd.DataFrame(tweets['statuses'])
             dftwt = dftwt.append(tempdf)
         except:
