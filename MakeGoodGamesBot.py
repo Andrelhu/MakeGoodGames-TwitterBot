@@ -34,8 +34,11 @@ twitter_client = API(auth_handler)
 
 
 #Date and data
-today = time.localtime()
-date = str(today[0])+'-'+str(today[1])+'-'+str(today[2])
+def get_date():
+    today = time.localtime()
+    date = str(today[0])+'-'+str(today[1])+'-'+str(today[2])
+    return date
+
 try:
     banRT = list(pd.read_pickle('ban_RT'))
     banTXT = list(pd.read_pickle('ban_TXT'))
@@ -48,12 +51,22 @@ except:
 #       2) RT followers, 
 #       3) RT highest ratio of number_of_RT/number_of_followers of previous day Statuses.
     
-def run_schedule(dt=date,ky='#indiedev',mx=150):
+def run_schedule(dt=get_date(),ky='#indiedev',mx=150):
     #tit_for_tat()
     RT_followers(key_=ky,max_=mx)
     RT_last_day(dt,key_=ky)
 
-        
+    
+def loop_schedule(date):
+    while True:
+        for ky in ['#indiedev','#indiegame']:
+            print 'Day '+str(date)+' and keyword '+str(ky)
+            run_schedule(dt=date,ky=ky)
+            d = get_date()        
+            if date != d:
+                date = d
+                break
+
 #Main Functions for 'run_schedule()'
 
 #Keeps track of who doesn't follow back. If an ID appears twice in this category then it
@@ -85,7 +98,7 @@ def tit_for_tat():
 #Take previous day tweets. Rank by higher RT of smaller accounts. Try to RT the underdog!
 def RT_last_day(date,key_='#indiedev'):
     print 'RT '+str(key_)+' most relevant tweets from yesterday!'
-    d = latest_tweets(date,key_=key_)
+    d = latest_tweets(date=date,key_=key_)
     d = rank_sort(d)
     plot_distro(d[:5000])
     a = RT_this(d[:10000],sleep_t=180)
@@ -267,7 +280,7 @@ def save_banDF():
     df.to_pickle('ban_TXT')    
     
 #Based on sixohsix
-def latest_tweets(date=date,key_="#indiedev #indiegame #gamedev"):
+def latest_tweets(date=get_date(),key_="#indiedev #indiegame #gamedev"):
     print "Search for "+str(date)
     tweets = t.search.tweets(q=key_,count=5000,until=date)
     dftwt = pd.DataFrame(tweets['statuses'])
