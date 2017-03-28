@@ -51,8 +51,8 @@ except:
 #       2) RT followers, 
 #       3) RT highest ratio of number_of_RT/number_of_followers of previous day Statuses.
     
-def run_schedule(dt=get_date(),ky='#indiedev',mx=150):
-    #tit_for_tat()
+def run_schedule(dt=get_date(),ky='#indiedev',mx=150,clean=False):
+    if clean: tit_for_tat()
     RT_followers(key_=ky,max_=mx)
     RT_last_day(dt,key_=ky)
 
@@ -179,7 +179,7 @@ def RT_this(d,sleep_t=60,stop_at=500,allow_like=False):
                 
                 try:
                     u_fol,u_fri=tweet[29]['followers_count'],tweet[29]['friends_count']
-                    if (u_fol > 1000 and u_fol < 5000) or (u_fol > 1.5*u_fri):
+                    if (u_fol > 500 and u_fol < 10000) or (u_fol > 1.5*u_fri):
                         if i==4:
                             time.sleep(sleep_t)
                         i=6
