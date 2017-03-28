@@ -51,9 +51,9 @@ except:
 #       2) RT followers, 
 #       3) RT highest ratio of number_of_RT/number_of_followers of previous day Statuses.
     
-def run_schedule(dt=get_date(),ky='#indiedev',mx=150,clean=False):
+def run_schedule(dt=get_date(),ky='#indiedev',mx=150,clean=False,folow=False):
     if clean: tit_for_tat()
-    RT_followers(key_=ky,max_=mx)
+    if folow: RT_followers(key_=ky,max_=mx)
     RT_last_day(dt,key_=ky)
 
     
@@ -139,7 +139,7 @@ def RT_followers(key_='#indiedev',max_=150,rts_=2): #900/1500 Rate limit
             pass
 
 #RT statuses from a given DataFrame d.
-def RT_this(d,sleep_t=60,stop_at=500,allow_like=False):
+def RT_this(d,sleep_t=60,stop_at=500,allow_like=False,checkmedia=False):
     err,twts,iters=0,0,0
     for tweet in d.values:
         if twts == stop_at:
@@ -163,6 +163,8 @@ def RT_this(d,sleep_t=60,stop_at=500,allow_like=False):
                 if publish == False:
                     time.sleep(60)
             i=3
+            if checkmedia and publish:
+                    publish = filter_gif(tweet)
             if publish:
                 try:
                     twitter_client.retweet(tweet[8])
@@ -353,3 +355,10 @@ def unfollow_this(ids_):
     for id_ in ids_:
         twitter_client.destroy_friendship(id_)
         time.sleep(10)
+        
+def filter_gif(tweet,v=False):
+    try:
+        if len(tweet[4]['media']) > 0: v=True
+    except:
+        pass
+    return v
