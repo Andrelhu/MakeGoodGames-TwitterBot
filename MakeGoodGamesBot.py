@@ -25,13 +25,15 @@ access_token_secret = ds[3]
 #Probably going to modify soon for only one.
 
 #Twitter (sixohsix) client
-t  =  Twitter(auth=OAuth(access_token, access_token_secret, consumer_key, consumer_secret))
+t = Twitter(auth=OAuth(access_token, access_token_secret, consumer_key, consumer_secret))
 
 #Tweepy client
 auth_handler = OAuthHandler(consumer_key, consumer_secret)
 auth_handler.set_access_token(access_token, access_token_secret)
 twitter_client = API(auth_handler)
 
+#Banwords
+banwords = ['#mplusrewards','#cheats','#cheat']
 
 #Date and data
 def get_date():
@@ -56,6 +58,9 @@ def run_schedule(dt=get_date(),ky='#indiedev',mx=150,clean=False,folow=False):
     if folow: RT_followers(key_=ky,max_=mx)
     RT_last_day(dt,key_=ky)
 
+def twice():
+    run_schedule(folow=True)
+    run_schedule(ky='#indiegame',clean=True,folow=True)
     
 def loop_schedule(date):
     while True:
@@ -115,8 +120,18 @@ def RT_followers(key_='#indiedev',max_=150,rts_=2): #900/1500 Rate limit
         try:
             c = twitter_client.user_timeline(f,count=100)
         except:
-            print 'Cant retweet follower.'
+            #print 'Cant retweet follower.'
+            pass
         tcl = [ci for ci in c if '#indiedev' in ci.text and ci.in_reply_to_status_id == None]
+        ttcl = []
+        for t in tcl:
+            keep = True
+            for word in banwords:
+                if word in t.entities['hashtags']:
+                    keep = False
+            if keep == True:
+                ttcl.append(t)
+        tcl = ttcl
         if len(tcl) > 0:
             dc = {str(i.id):int(i.retweet_count) for i in tcl}
             dfc = pd.DataFrame.from_dict(dc,orient='index')
