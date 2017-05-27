@@ -12,6 +12,6 @@ A Twitter-bot for the under represented indiedevs. It currently looks for new or
 #### This a very tailor-made code for my personal use.
 If you have any questions dont hesitate to send me a personal message or raise an issue.
 
-Thank you!
+Thank you!!
 
 ## GG
